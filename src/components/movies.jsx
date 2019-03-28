@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import Like from "./common/like";
+import Pagination from "./common/pagination";
 import { getMovies } from "../services/fakeMovieService";
 
 class Movies extends Component {
   state = {
-    movies: getMovies()
+    movies: getMovies(),
+    pageSize: 4
   };
 
   handleDelete = movie => {
@@ -12,13 +14,17 @@ class Movies extends Component {
     this.setState({ movies }); //according to ES6, it is equal to: this.setState({movies: movies});
   };
 
-  handleLike = (movie) => {
+  handleLike = movie => {
     const movies = [...this.state.movies];
     const index = movies.indexOf(movie);
-    movies[index] = {...movie};
+    movies[index] = { ...movie };
     movies[index].liked = !movies[index].liked;
-    this.setState({movies});
-  }
+    this.setState({ movies });
+  };
+
+  handlePageChange = page => {
+    console.log(page);
+  };
 
   render() {
     const { length: count } = this.state.movies;
@@ -46,7 +52,10 @@ class Movies extends Component {
                 <td>{movie.numberInStock}</td>
                 <td>{movie.dailyRentalRate}</td>
                 <td>
-                  <Like liked={movie.liked} onClick={() => this.handleLike(movie)}/>
+                  <Like
+                    liked={movie.liked}
+                    onClick={() => this.handleLike(movie)}
+                  />
                 </td>
                 <td>
                   <button
@@ -60,6 +69,11 @@ class Movies extends Component {
             ))}
           </tbody>
         </table>
+        <Pagination
+          itemsCount={count}
+          pageSize={this.state.pageSize}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
