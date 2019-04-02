@@ -1,11 +1,10 @@
 import React, { Component } from "react";
+import Input from "./common/input";
 
 class LoginForm extends Component {
-    state = {
-        account: {username: '', password: ''}
-    };
-
- 
+  state = {
+    account: { username: "", password: "" }
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -13,31 +12,30 @@ class LoginForm extends Component {
     console.log("Submitted");
   };
 
-  handleChange = e =>{
-      const account = {...this.state.account};
-      account.username = e.currentTarget.value;
-      this.setState({account});
-  }
+  handleChange = ({ currentTarget: input }) => {
+    const account = { ...this.state.account };
+    account[input.name] = input.value;
+    this.setState({ account });
+  };
 
   render() {
+    const { account } = this.state;
     return (
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              value={this.state.account.username}
-              onChange={this.handleChange}
-              id="username"
-              type="text"
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input id="password" type="text" className="form-control" />
-          </div>
+          <Input
+            name="username"
+            value={account.username}
+            label="Username"
+            onChange={this.handleChange}
+          />
+          <Input
+            name="password"
+            value={account.password}
+            label="Password"
+            onChange={this.handleChange}
+          />
           <button className="btn btn-primary">Login</button>
         </form>
       </div>
