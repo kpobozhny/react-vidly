@@ -1,7 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { login } from "../services/authService";
+import auth from "../services/authService";
 
 class LoginForm extends Form {
   state = {
@@ -22,8 +22,7 @@ class LoginForm extends Form {
     // Call the server
     try {
       const { data } = this.state;
-      const { data: jwt } = await login(data.username, data.password);
-      localStorage.setItem('token', jwt);
+      await auth.login(data.username, data.password);      
       window.location = '/'; // it will triger a full reload of application
       // it is better then call: this.props.history.push('/'); - in this case we do not mount app with a valid info from local storage, where jwt token is stored
     } catch (ex) {
