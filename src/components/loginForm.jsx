@@ -1,4 +1,5 @@
 import React from "react";
+import {Redirect} from "react-router-dom";
 import Joi from "joi-browser";
 import Form from "./common/form";
 import auth from "../services/authService";
@@ -22,8 +23,11 @@ class LoginForm extends Form {
     // Call the server
     try {
       const { data } = this.state;
-      await auth.login(data.username, data.password);      
-      window.location = '/'; // it will triger a full reload of application
+      await auth.login(data.username, data.password);  
+      
+      const {state} = this.props.location;
+
+      window.location = state ? state.from.pathname : "/"; // it will triger a full reload of application
       // it is better then call: this.props.history.push('/'); - in this case we do not mount app with a valid info from local storage, where jwt token is stored
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
@@ -35,6 +39,8 @@ class LoginForm extends Form {
   };
 
   render() {
+    if (auth.getCurrentUser()) return <Redirect to="/" />;
+
     return (
       <div>
         <h1>Login</h1>
